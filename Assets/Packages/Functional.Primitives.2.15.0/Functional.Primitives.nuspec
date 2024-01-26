@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Functional.Primitives</id>
+    <version>2.15.0</version>
+    <title>Functional.Primitives</title>
+    <authors>Johannes Moersch + contributors</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/JohannesMoersch/Functional</projectUrl>
+    <description>This package contains allocation free Option and Result discriminated union types and associated factory methods.</description>
+    <copyright>Copyright © 2020 Johannes Moersch</copyright>
+    <tags>functional</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>
