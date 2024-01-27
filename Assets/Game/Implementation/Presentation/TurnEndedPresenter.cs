@@ -12,8 +12,12 @@ public class TurnEndedPresenter : MonoBehaviour
 	{
 		TurnEndedPanel.SetActive(false);
 
-		TeamEvents.OfType<TeamEvent, TeamEvent.TeamTurnEnded>()
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMovementDepleted>()
 			.Subscribe(_ => TurnEndedPanel.SetActive(true))
+			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamTurnEnded>()
+			.Subscribe(_ => TurnEndedPanel.SetActive(false))
 			.AddTo(this);
 	}
 }

@@ -6,6 +6,7 @@ using Zenject;
 public class TeamMemberKeyInput : MonoBehaviour
 {
 	[SerializeField] private KeyCode[] TeamMemberKeys;
+	[SerializeField] private KeyCode EndTurnKey = KeyCode.Space;
 
 	[Inject] public ITeamCommands TeamCommands { private get; set; }
 
@@ -16,6 +17,9 @@ public class TeamMemberKeyInput : MonoBehaviour
 			if (Input.GetKeyDown(keyCode))
 				TeamCommands.SelectTeamMember(new TeamMemberIdentifier(teamMemberId));
 		}
+
+		if (Input.GetKeyDown(EndTurnKey))
+			TeamCommands.EndTurn();
 	}
 
 	void FixedUpdate()

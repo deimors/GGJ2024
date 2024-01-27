@@ -11,5 +11,7 @@ public abstract record TeamEvent
 
 	public record TeamMemberCreated(TeamMemberIdentifier TeamMemberId, Vector3 Position) : TeamEvent;
 
+	public record TeamMovementDepleted : TeamEvent;
+
 	public record TeamTurnEnded : TeamEvent;
 }

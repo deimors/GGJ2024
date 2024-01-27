@@ -54,8 +54,8 @@ namespace Assets.Game.Implementation.Domain
 			else
 				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
 
-			if (_states.All(pair => pair.Value.MoveRemaining == 0))
-				_events.OnNext(new TeamEvent.TeamTurnEnded());
+			if (NoMovementRemaining)
+				_events.OnNext(new TeamEvent.TeamMovementDepleted());
 
 			return Unit.Value;
 		}
@@ -69,6 +69,16 @@ namespace Assets.Game.Implementation.Domain
 
 			return Unit.Value;
 		}
+
+		public Result<Unit, TeamError> EndTurn()
+		{
+			if (NoMovementRemaining)
+				_events.OnNext(new TeamEvent.TeamTurnEnded());
+
+			return Unit.Value;
+		}
+
+		private bool NoMovementRemaining => _states.All(pair => pair.Value.MoveRemaining == 0);
 	}
 
 	internal record TeamMemberState(float MoveRemaining);
