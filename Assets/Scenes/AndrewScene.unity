@@ -21567,6 +21567,93 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1598422853}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1602368484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1602368486}
+  - component: {fileID: 1602368485}
+  m_Layer: 0
+  m_Name: PathfinderGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1602368485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602368484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  data:
+    dataString: UEsDBBQAAAgIAACQn+trHFLRVQIAABMFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVMty4jAQ/BVK52XLQKDC3nYdQvaQQIVN5eKLLI2xClly6cGz+PeVZBkT52RXd89Mz8O+ICZ0DcRItVSMvkoK6NcA+Xf0Y9CRL3DEWyk27Ayt5pNRU3oRDpp3bJh0+MiHaVmBUYz8FlvuxYkDrWCFVNWCbiGV2mgHF5hrcJSSxkcLB10G6BgDTvF59s/B1b0REAZUpxpOe7LhNOisIBxXNVDvt5OPW/mkSSdcJ1GR/PQckZwzHY0gc6pDoymutXVtOAFl2DUWLDQRJbBtaWLbt/BVUWgw0ZfCpyem3ISavOiPbMZWYb1rvO0xt77S7KHx1SR9/caPp7PAF0pWL7fCiS9iSkZ27/hEsPagURZ66FNnfRRGdMB8h3MOnyWIN7lU0grahVoN46e7Fd16S0sgu07XeG3BVm3r76scdau8hvaPKWdVHkb50AAbLsPI5z4GlFvPX+c4nIaOmRzqXXxo+Ie39zcUiWemtHFULCi8vVxa5aVoEWbmu7EmlUpAgGMnNQjMzWnt0pj+DnvcXdke84z91xKLR679CHohAe70SdKj1vJw25Yu5eEVdLmyhjMBnWlPvLk5pVKI5sTuZ9KGbawqMLkL21pGv94WIvPZ+PEBzyaPj3Q6mifD6WQ+yccTmOaEJvM8R+H2mHB9Yr5ujMbxuK2JLrlwh9b+RAZLhetw7lThw5KdK3k3ciYKuSEKQKy+ZNCgXA33ZdIFZW4+GzCGibBudMkQl2QHNLvps9Do4mgUzrruM1SzvTQeyVAa/hwZ8vDtlNcK9gwOvnab7Iqu/wFQSwMEFAAACAgAAJCf64s4gyVtAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTXUVBKL0osyCgGihiCOKWZKSB2tFKypZmRhUmimbGFRYqpoaWBrqmxpXGSkXGqaVJyioFlUpJSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nntRZoo7yGil2FoAUEsBAi0AFAAACAgAAJCf62scUtFVAgAAEwUAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAJCf64s4gyVtAAAAeAAAAAkAJAAAAAAAAAAAAAAAogIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAABaAwAAAAA=
+    upgradeData: 
+    file_cachedStartup: {fileID: 0}
+    data_cachedStartup: 
+    cacheStartup: 0
+  showNavGraphs: 1
+  showUnwalkableNodes: 1
+  debugMode: 0
+  debugFloor: 0
+  debugRoof: 1
+  manualDebugFloorRoof: 0
+  showSearchTree: 1
+  unwalkableNodeDebugSize: 0.3
+  logPathResults: 2
+  maxNearestNodeDistance: 100
+  scanOnStartup: 1
+  fullGetNearestSearch: 0
+  prioritizeGraphs: 0
+  prioritizeGraphsLimit: 1
+  colorSettings:
+    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
+    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
+    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
+    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
+    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
+    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
+    _AreaColors:
+    - {r: 0, g: 0, b: 0, a: 0}
+  tagNames: []
+  heuristic: 2
+  heuristicScale: 1
+  threadCount: 1
+  maxFrameTime: 10
+  batchGraphUpdates: 0
+  graphUpdateBatchingInterval: 0.2
+  euclideanEmbedding:
+    mode: 0
+    seed: 0
+    pivotPointRoot: {fileID: 0}
+    spreadOutCount: 1
+  showGraphs: 1
+--- !u!4 &1602368486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602368484}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1603426527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29537,6 +29624,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2586203376703592679, guid: 22ecd65a3140e864ab0364f346ea29c1,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7813517851279265074, guid: 22ecd65a3140e864ab0364f346ea29c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -29685,3 +29777,4 @@ SceneRoots:
   - {fileID: 1885278731}
   - {fileID: 1490386982382153124}
   - {fileID: 4129549}
+  - {fileID: 1602368486}
