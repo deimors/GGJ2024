@@ -12,8 +12,7 @@ namespace Assets.Game.Implementation.Domain
 	{
 		private readonly Subject<TeamEvent> _events = new();
 
-		private float _totalMove = 5.0f;
-		private float _moveRemaining = 5.0f;
+		private const float TotalMove = 5.0f;
 
 		private TeamMemberIdentifier _currentTeamMember;
 
@@ -24,28 +23,33 @@ namespace Assets.Game.Implementation.Domain
 
 		public Result<Unit, TeamError> Initialize(TeamConfig config)
 		{
-			_states = config.Positions.ToDictionary(pair => pair.Key, _ => new TeamMemberState(_totalMove));
+			_states = config.Positions.ToDictionary(pair => pair.Key, _ => new TeamMemberState(TotalMove));
 			_currentTeamMember = config.Positions.Keys.First();
-
-			Debug.Log($"Initialized current team member = {_currentTeamMember}");
 
 			foreach (var (teamMemberId, position) in config.Positions)
 			{
 				_events.OnNext(new TeamEvent.TeamMemberCreated(teamMemberId, position));
 			}
 
-			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember)));
+			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1.0f)));
 
 			return Unit.Value;
 		}
 
 		public Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity, float amount)
 		{
-			_moveRemaining = Math.Max(_moveRemaining - amount, 0);
+			var currentState = _states[_currentTeamMember];
 
-			var remainingMovePercent = _moveRemaining / _totalMove;
+			if (currentState.MoveRemaining == 0)
+				return Unit.Value;
 
-			if (_moveRemaining > 0)
+			var newMoveRemaining = Math.Max(currentState.MoveRemaining - amount, 0);
+
+			var remainingMovePercent = newMoveRemaining / TotalMove;
+
+			_states[_currentTeamMember] = currentState with { MoveRemaining = newMoveRemaining };
+
+			if (newMoveRemaining > 0)
 				_events.OnNext(new TeamEvent.TeamMemberMoved(_currentTeamMember, targetVelocity, remainingMovePercent));
 			else
 				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
@@ -56,8 +60,9 @@ namespace Assets.Game.Implementation.Domain
 		public Result<Unit, TeamError> SelectTeamMember(TeamMemberIdentifier teamMemberId)
 		{
 			_currentTeamMember = teamMemberId;
+			var remainingMovePercent = _states[_currentTeamMember].MoveRemaining / TotalMove;
 
-			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember));
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, remainingMovePercent));
 
 			return Unit.Value;
 		}

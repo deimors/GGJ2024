@@ -19,7 +19,7 @@ public abstract record TeamEvent
 
 	public record TeamMemberMoveEnded(TeamMemberIdentifier TeamMemberId) : TeamEvent;
 
-	public record TeamMemberSelected(TeamMemberIdentifier TeamMemberId) : TeamEvent;
+	public record TeamMemberSelected(TeamMemberIdentifier TeamMemberId, float RemainingMovePercent) : TeamEvent;
 
 	public record TeamMemberCreated(TeamMemberIdentifier TeamMemberId, Vector3 Position) : TeamEvent;
 }

@@ -22,5 +22,9 @@ public class RemainingMovementPresenter : MonoBehaviour
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoved>()
 			.Subscribe(moved => _slider.value = moved.RemainingMovePercent)
 			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberSelected>()
+			.Subscribe(selected => _slider.value = selected.RemainingMovePercent)
+			.AddTo(this);
 	}
 }
