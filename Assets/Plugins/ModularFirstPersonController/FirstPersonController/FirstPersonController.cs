@@ -4,8 +4,10 @@
 //
 // "Enable/Disable Headbob, Changed look rotations - should result in reduced camera jitters" || version 1.0.1
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +18,9 @@ using UnityEngine.UI;
 
 public class FirstPersonController : MonoBehaviour
 {
+	private readonly Subject<float> _characterMoved = new();
+	public IObservable<float> CharacterMoved => _characterMoved;
+
     private Rigidbody rb;
 
     #region Camera Movement Variables
@@ -436,6 +441,9 @@ public class FirstPersonController : MonoBehaviour
 
                 rb.AddForce(velocityChange, ForceMode.VelocityChange);
             }
+
+            if (isWalking)
+                _characterMoved.OnNext(Time.fixedDeltaTime);
         }
 
         #endregion
