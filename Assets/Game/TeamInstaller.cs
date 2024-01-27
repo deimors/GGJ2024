@@ -22,5 +22,6 @@ public class TeamInstaller : MonoInstaller
 			.ToFactory(created => new TeamMemberParams(created.TeamMemberId, created.Position));
 
 		Container.Bind<TeamCameras>().ToSelf().AsSingle();
+		Container.BindInterfacesAndSelfTo<TeamPositions>().AsSingle().NonLazy();
 	}
 }

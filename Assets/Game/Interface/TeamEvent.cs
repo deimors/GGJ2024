@@ -16,4 +16,6 @@ public abstract record TeamEvent
 	public record TeamTurnEnded : TeamEvent;
 
 	public record TeamExited : TeamEvent;
+
+	public record TeamMemberPositionDeclared(TeamMemberIdentifier TeamMemberId, Vector3 Position) : TeamEvent;
 }

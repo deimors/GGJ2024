@@ -60,6 +60,13 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
+		public Result<Unit, TeamError> DeclareTeamMemberPosition(TeamMemberIdentifier teamMemberId, Vector3 position)
+		{
+			_events.OnNext(new TeamEvent.TeamMemberPositionDeclared(teamMemberId, position));
+
+			return Unit.Value;
+		}
+
 		public Result<Unit, TeamError> SelectTeamMember(TeamMemberIdentifier teamMemberId)
 		{
 			_currentTeamMember = teamMemberId;

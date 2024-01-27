@@ -45,5 +45,14 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 				_controller.cameraCanMove = false;
 			})
 			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoveEnded>()
+			.Where(ended => ended.TeamMemberId == TeamMemberId)
+			.Subscribe(_ =>
+			{
+				_controller.StopMoving();
+				TeamCommands.DeclareTeamMemberPosition(TeamMemberId, transform.position);
+			})
+			.AddTo(this);
 	}
 }
