@@ -21,5 +21,8 @@ public class EnemiesInstaller : MonoInstaller
 
 		Container.BindEvent<EnemyEvent, EnemyEvent.EnemyCreated>()
 			.ToFactory(created => new EnemyParams(created.EnemyId, created.Position));
+
+		Container.BindEvent<TeamEvent, TeamEvent.TeamTurnEnded>()
+			.ToCommand<IEnemyCommands, EnemyError>((_, enemies) => enemies.StartTurn());
 	}
 }

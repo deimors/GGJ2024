@@ -7,6 +7,8 @@ using Unit = Functional.Unit;
 public interface IEnemyCommands
 {
 	Result<Unit, EnemyError> Initialize(EnemiesConfig config);
+
+	Result<Unit, EnemyError> StartTurn();
 }
 
 public interface IEnemyEvents : IObservable<EnemyEvent> {}
@@ -14,6 +16,8 @@ public interface IEnemyEvents : IObservable<EnemyEvent> {}
 public abstract record EnemyEvent
 {
 	public record EnemyCreated(EnemyIdentifier EnemyId, Vector3 Position) : EnemyEvent;
+
+	public record EnemyTurnStarted(EnemyIdentifier EnemyId) : EnemyEvent;
 }
 
 public record EnemiesConfig(IReadOnlyDictionary<EnemyIdentifier, Vector3> Positions);
