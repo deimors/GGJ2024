@@ -8,11 +8,16 @@ public class EnemiesInitializer : MonoBehaviour
 
 	void Start()
 	{
-		var enemyPositions = GetComponentsInChildren<EnemySpawnPoint>()
+		var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>();
+
+		var enemyPositions = spawnPoints
 			.ToDictionary(
 				_ => EnemyIdentifier.Create(),
 				spawnPoint => spawnPoint.transform.position
 			);
+
+		foreach (var spawnPoint in spawnPoints)
+			spawnPoint.gameObject.SetActive(false);
 
 		EnemyCommands.Initialize(new EnemiesConfig(enemyPositions));
 	}

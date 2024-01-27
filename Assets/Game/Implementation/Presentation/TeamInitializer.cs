@@ -19,6 +19,9 @@ public class TeamInitializer : MonoBehaviour
 
 		var config = new TeamConfig(teamPositions);
 
+		foreach (var spawnPoint in spawnPoints)
+			spawnPoint.gameObject.SetActive(false);
+
 		TeamCommands.Initialize(config).DoOnFailure(Debug.LogError);
 	}
 }
