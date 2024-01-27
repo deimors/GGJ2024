@@ -12,8 +12,17 @@ namespace Assets.Game.Implementation.Domain
 		private float _totalMove = 5.0f;
 		private float _moveRemaining = 5.0f;
 
+		private int _currentTeamMember = 0;
+
 		public IDisposable Subscribe(IObserver<TeamEvent> observer) 
 			=> _events.Subscribe(observer);
+
+		public Result<Unit, TeamError> Initialize()
+		{
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember));
+
+			return Unit.Value;
+		}
 
 		public Result<Unit, TeamError> MoveTeamMember(float amount)
 		{
@@ -24,7 +33,16 @@ namespace Assets.Game.Implementation.Domain
 			_events.OnNext(new TeamEvent.TeamMemberMoved(remainingMovePercent));
 
 			if (_moveRemaining <= 0)
-				_events.OnNext(new TeamEvent.TeamMemberMoveEnded());
+				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
+
+			return Unit.Value;
+		}
+
+		public Result<Unit, TeamError> SelectTeamMember(int teamMemberId)
+		{
+			_currentTeamMember = teamMemberId;
+
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember));
 
 			return Unit.Value;
 		}

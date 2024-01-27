@@ -7,5 +7,7 @@ public class TeamInstaller : MonoInstaller
 	public override void InstallBindings()
 	{
 		Container.BindModel<TeamAggregate>();
+
+		Container.BindIntegration<InitializeTeamOnFirstFrame>();
 	}
 }
