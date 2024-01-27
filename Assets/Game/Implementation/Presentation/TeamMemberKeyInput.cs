@@ -17,4 +17,14 @@ public class TeamMemberKeyInput : MonoBehaviour
 				TeamCommands.SelectTeamMember(new TeamMemberIdentifier(teamMemberId));
 		}
 	}
+
+	void FixedUpdate()
+	{
+		var targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+		if (targetVelocity.magnitude > Mathf.Epsilon)
+		{
+			TeamCommands.MoveTeamMember(targetVelocity, Time.fixedDeltaTime);
+		}
+	}
 }

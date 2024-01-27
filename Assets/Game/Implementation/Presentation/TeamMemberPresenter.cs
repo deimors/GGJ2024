@@ -21,31 +21,18 @@ public class TeamMemberPresenter : MonoBehaviour
 
 	void Start()
 	{
-		_controller.CharacterMoved
-			.Subscribe(amount => TeamCommands.MoveTeamMember(amount).DoOnFailure(Debug.LogError))
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoved>()
+			.Where(moved => moved.TeamMemberId == TeamMemberId)
+			.Subscribe(moved => _controller.MovePlayer(moved.TargetVelocity))
 			.AddTo(this);
 
-		var hasRemainingMove = TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoveEnded>()
-			.Where(moveEnded => moveEnded.TeamMemberId == TeamMemberId)
-			.Select(_ => false)
-			.Merge(Observable.Return(true));
-
-		var isMovingMember = TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberSelected>()
-			.Select(selected => selected.TeamMemberId == TeamMemberId);
-
-		isMovingMember
-			.CombineLatest(hasRemainingMove, (isMoving, hasRemaining) => hasRemaining && isMoving)
-			.Subscribe(SetCanMove)
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberSelected>()
+			.Select(selected => selected.TeamMemberId == TeamMemberId)
+			.Subscribe(isMoving =>
+			{
+				_controller.playerCamera.enabled = isMoving;
+				_controller.cameraCanMove = isMoving;
+			})
 			.AddTo(this);
-
-		isMovingMember
-			.Subscribe(isMoving => _controller.playerCamera.enabled = isMoving)
-			.AddTo(this);
-	}
-
-	private void SetCanMove(bool canMove)
-	{
-		_controller.playerCanMove = canMove;
-		_controller.cameraCanMove = canMove;
 	}
 }

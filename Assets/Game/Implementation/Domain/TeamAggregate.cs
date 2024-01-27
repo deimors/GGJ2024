@@ -27,25 +27,27 @@ namespace Assets.Game.Implementation.Domain
 			_states = config.Positions.ToDictionary(pair => pair.Key, _ => new TeamMemberState(_totalMove));
 			_currentTeamMember = config.Positions.Keys.First();
 
+			Debug.Log($"Initialized current team member = {_currentTeamMember}");
+
 			foreach (var (teamMemberId, position) in config.Positions)
 			{
 				_events.OnNext(new TeamEvent.TeamMemberCreated(teamMemberId, position));
 			}
 
-			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember));
+			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember)));
 
 			return Unit.Value;
 		}
 
-		public Result<Unit, TeamError> MoveTeamMember(float amount)
+		public Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity, float amount)
 		{
 			_moveRemaining = Math.Max(_moveRemaining - amount, 0);
 
 			var remainingMovePercent = _moveRemaining / _totalMove;
 
-			_events.OnNext(new TeamEvent.TeamMemberMoved(remainingMovePercent));
-
-			if (_moveRemaining <= 0)
+			if (_moveRemaining > 0)
+				_events.OnNext(new TeamEvent.TeamMemberMoved(_currentTeamMember, targetVelocity, remainingMovePercent));
+			else
 				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
 
 			return Unit.Value;

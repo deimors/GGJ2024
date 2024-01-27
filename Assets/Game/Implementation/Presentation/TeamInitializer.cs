@@ -1,6 +1,6 @@
-using System.Linq;
 using Assets.Game.Implementation.Domain;
 using Functional;
+using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -13,7 +13,7 @@ public class TeamInitializer : MonoBehaviour
 		var spawnPoints = gameObject.GetComponentsInChildren<TeamMemberSpawnPoint>();
 
 		var teamPositions = spawnPoints.ToDictionary(
-			_ => TeamMemberIdentifier.Create(), 
+			_ => TeamMemberIdentifier.Create(),
 			spawnPoint => spawnPoint.transform.position
 		);
 
