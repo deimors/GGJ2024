@@ -34,7 +34,17 @@ public class TeamMemberPresenter : MonoBehaviour
 
 		isMovingMember
 			.CombineLatest(hasRemainingMove, (isMoving, hasRemaining) => hasRemaining && isMoving)
-			.Subscribe(canMove => _controller.playerCanMove = canMove)
+			.Subscribe(SetCanMove)
 			.AddTo(this);
+
+		isMovingMember
+			.Subscribe(isMoving => _controller.playerCamera.enabled = isMoving)
+			.AddTo(this);
+	}
+
+	private void SetCanMove(bool canMove)
+	{
+		_controller.playerCanMove = canMove;
+		_controller.cameraCanMove = canMove;
 	}
 }
