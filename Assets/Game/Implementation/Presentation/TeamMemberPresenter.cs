@@ -13,6 +13,7 @@ public class TeamMemberPresenter : MonoBehaviour
 
 	[Inject] public ITeamCommands TeamCommands { private get; set; }
 	[Inject] public ITeamEvents TeamEvents { private get; set; }
+	[Inject] public TeamCameras TeamCameras { private get; set; }
 
 	void Awake()
 	{
@@ -34,5 +35,7 @@ public class TeamMemberPresenter : MonoBehaviour
 				_controller.cameraCanMove = isMoving;
 			})
 			.AddTo(this);
+
+		TeamCameras.Add(_controller.playerCamera);
 	}
 }

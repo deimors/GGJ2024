@@ -20,5 +20,7 @@ public class TeamInstaller : MonoInstaller
 
 		Container.BindEvent<TeamEvent, TeamEvent.TeamMemberCreated>()
 			.ToFactory(created => new TeamMemberParams(created.TeamMemberId, created.Position));
+
+		Container.Bind<TeamCameras>().ToSelf().AsSingle();
 	}
 }
