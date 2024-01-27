@@ -1,3 +1,4 @@
+using Assets.Game.Implementation.Domain;
 using Functional;
 using UniRx;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class TeamMemberPresenter : MonoBehaviour
 {
 	private FirstPersonController _controller;
 
-	[SerializeField] private int TeamMemberId;
+	[Inject] public TeamMemberIdentifier TeamMemberId { private get; set; }
 
 	[Inject] public ITeamCommands TeamCommands { private get; set; }
 	[Inject] public ITeamEvents TeamEvents { private get; set; }

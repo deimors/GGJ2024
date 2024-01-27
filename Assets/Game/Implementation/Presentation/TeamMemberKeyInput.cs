@@ -1,4 +1,5 @@
 using System.Linq;
+using Assets.Game.Implementation.Domain;
 using UnityEngine;
 using Zenject;
 
@@ -13,7 +14,7 @@ public class TeamMemberKeyInput : MonoBehaviour
 		foreach (var (keyCode, teamMemberId) in TeamMemberKeys.Select((keyCode, teamMemberId) => (keyCode, teamMemberId)))
 		{
 			if (Input.GetKeyDown(keyCode))
-				TeamCommands.SelectTeamMember(teamMemberId);
+				TeamCommands.SelectTeamMember(new TeamMemberIdentifier(teamMemberId));
 		}
 	}
 }
