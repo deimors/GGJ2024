@@ -78,6 +78,13 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
+		public Result<Unit, TeamError> ExitTeamMember(TeamMemberIdentifier teamMemberId)
+		{
+			_events.OnNext(new TeamEvent.TeamExited());
+
+			return Unit.Value;
+		}
+
 		private bool NoMovementRemaining => _states.All(pair => pair.Value.MoveRemaining == 0);
 	}
 

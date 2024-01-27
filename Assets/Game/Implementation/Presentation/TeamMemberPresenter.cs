@@ -5,11 +5,11 @@ using UnityEngine;
 using Zenject;
 
 [RequireComponent(typeof(FirstPersonController))]
-public class TeamMemberPresenter : MonoBehaviour
+public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 {
 	private FirstPersonController _controller;
 
-	[Inject] public TeamMemberIdentifier TeamMemberId { private get; set; }
+	[Inject] public TeamMemberIdentifier TeamMemberId { get; set; }
 
 	[Inject] public ITeamCommands TeamCommands { private get; set; }
 	[Inject] public ITeamEvents TeamEvents { private get; set; }
@@ -37,5 +37,13 @@ public class TeamMemberPresenter : MonoBehaviour
 			.AddTo(this);
 
 		TeamCameras.Add(_controller.playerCamera);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamExited>()
+			.Subscribe(_ =>
+			{
+				_controller.playerCanMove = false;
+				_controller.cameraCanMove = false;
+			})
+			.AddTo(this);
 	}
 }

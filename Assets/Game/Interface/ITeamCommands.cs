@@ -9,4 +9,5 @@ public interface ITeamCommands
 	Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity, float amount);
 	Result<Unit, TeamError> SelectTeamMember(TeamMemberIdentifier teamMemberId);
 	Result<Unit, TeamError> EndTurn();
+	Result<Unit, TeamError> ExitTeamMember(TeamMemberIdentifier teamMemberId);
 }
