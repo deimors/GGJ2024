@@ -22,6 +22,8 @@ public abstract record TeamEvent
 	public record TeamMemberSelected(TeamMemberIdentifier TeamMemberId, float RemainingMovePercent) : TeamEvent;
 
 	public record TeamMemberCreated(TeamMemberIdentifier TeamMemberId, Vector3 Position) : TeamEvent;
+
+	public record TeamTurnEnded : TeamEvent;
 }
 
 public record TeamError

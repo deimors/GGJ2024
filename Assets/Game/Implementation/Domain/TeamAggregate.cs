@@ -54,6 +54,9 @@ namespace Assets.Game.Implementation.Domain
 			else
 				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
 
+			if (_states.All(pair => pair.Value.MoveRemaining == 0))
+				_events.OnNext(new TeamEvent.TeamTurnEnded());
+
 			return Unit.Value;
 		}
 
