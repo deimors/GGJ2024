@@ -28,7 +28,7 @@ public class TeamMemberKeyInput : MonoBehaviour
 
 		if (targetVelocity.magnitude > Mathf.Epsilon)
 		{
-			TeamCommands.MoveTeamMember(targetVelocity, Time.fixedDeltaTime);
+			TeamCommands.MoveTeamMember(targetVelocity);
 		}
 	}
 }

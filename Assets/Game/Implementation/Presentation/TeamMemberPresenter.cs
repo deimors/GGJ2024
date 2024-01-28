@@ -54,5 +54,9 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 				TeamCommands.DeclareTeamMemberPosition(TeamMemberId, transform.position);
 			})
 			.AddTo(this);
+
+		_controller.CharacterMoved
+			.Subscribe(moveAmount => TeamCommands.ReduceRemainingMove(TeamMemberId, moveAmount))
+			.AddTo(this);
 	}
 }

@@ -12,7 +12,7 @@ namespace Assets.Game.Implementation.Domain
 	{
 		private readonly Subject<TeamEvent> _events = new();
 
-		private const float TotalMove = 2.0f;
+		private const float TotalMove = 10.0f;
 
 		private TeamMemberIdentifier _currentTeamMember;
 
@@ -37,11 +37,24 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
-		public Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity, float amount)
+		public Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity)
 		{
 			if (_killed.Contains(_currentTeamMember))
 				return Unit.Value;
 
+			var currentState = _states[_currentTeamMember];
+
+			if (currentState.MoveRemaining == 0)
+				return Unit.Value;
+
+			
+			_events.OnNext(new TeamEvent.TeamMemberMoved(_currentTeamMember, targetVelocity));
+
+			return Unit.Value;
+		}
+
+		public Result<Unit, TeamError> ReduceRemainingMove(TeamMemberIdentifier teamMemberId, float amount)
+		{
 			var currentState = _states[_currentTeamMember];
 
 			if (currentState.MoveRemaining == 0)
@@ -53,10 +66,10 @@ namespace Assets.Game.Implementation.Domain
 
 			_states[_currentTeamMember] = currentState with { MoveRemaining = newMoveRemaining };
 
-			if (newMoveRemaining > 0)
-				_events.OnNext(new TeamEvent.TeamMemberMoved(_currentTeamMember, targetVelocity, remainingMovePercent));
-			else
-				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(_currentTeamMember));
+			_events.OnNext(new TeamEvent.MoveRemainingReduced(teamMemberId, remainingMovePercent));
+
+			if (newMoveRemaining == 0)
+				_events.OnNext(new TeamEvent.TeamMemberMoveEnded(teamMemberId));
 
 			if (NoMovementRemaining)
 				_events.OnNext(new TeamEvent.TeamMovementDepleted());

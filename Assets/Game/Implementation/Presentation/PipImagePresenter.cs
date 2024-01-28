@@ -30,9 +30,9 @@ public class PipImagePresenter : MonoBehaviour
 		_keyText.text = (TeamMemberId.Value + 1).ToString();
 		_deadImage.enabled = false;
 
-		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoved>()
-			.Where(moved => moved.TeamMemberId == TeamMemberId)
-			.Subscribe(moved => _slider.value = moved.RemainingMovePercent)
+		TeamEvents.OfType<TeamEvent, TeamEvent.MoveRemainingReduced>()
+			.Where(reduced => reduced.TeamMemberId == TeamMemberId)
+			.Subscribe(reduced => _slider.value = reduced.RemainingMovePercent)
 			.AddTo(this);
 
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamTurnStarted>()

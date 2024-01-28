@@ -156,6 +156,8 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
+	    _lastPos = rb.position;
+
         if(lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -204,6 +206,7 @@ public class FirstPersonController : MonoBehaviour
     }
 
     float camRotation;
+    private Vector3 _lastPos;
 
     private void Update()
     {
@@ -443,8 +446,13 @@ public class FirstPersonController : MonoBehaviour
             }
 
             if (isWalking)
-                _characterMoved.OnNext(Time.fixedDeltaTime);
-        }
+            {
+	            var moveDist = (rb.position - _lastPos).magnitude;
+	            _characterMoved.OnNext(moveDist);
+            }
+
+            _lastPos = rb.position;
+		}
 
         #endregion
     }
