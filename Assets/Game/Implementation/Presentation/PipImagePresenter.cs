@@ -11,6 +11,7 @@ public class PipImagePresenter : MonoBehaviour
 	[SerializeField] private Slider _slider;
 	[SerializeField] private Image _borderImage;
 	[SerializeField] private TextMeshProUGUI _keyText;
+	[SerializeField] private Image _deadImage;
 
 	[Inject] public TeamMemberIdentifier TeamMemberId { private get; set; }
 	[Inject] public RenderTexture Texture { private get; set; }
@@ -25,10 +26,9 @@ public class PipImagePresenter : MonoBehaviour
 	void Start()
 	{
 		_rawImage.texture = Texture;
-
 		_slider.value = 1;
-
 		_keyText.text = (TeamMemberId.Value + 1).ToString();
+		_deadImage.enabled = false;
 
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoved>()
 			.Where(moved => moved.TeamMemberId == TeamMemberId)
@@ -42,5 +42,13 @@ public class PipImagePresenter : MonoBehaviour
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberSelected>()
 			.Subscribe(selected => _borderImage.enabled = selected.TeamMemberId == TeamMemberId)
 			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberKilled>()
+			.Where(killed => killed.TeamMemberId == TeamMemberId)
+			.Subscribe(_ =>
+			{
+				_deadImage.enabled = true;
+				_slider.gameObject.SetActive(false);
+			});
 	}
 }
