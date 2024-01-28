@@ -5795,7 +5795,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 100, y: 200}
+  m_SizeDelta: {x: 110, y: 220}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &426120282
 MonoBehaviour:
@@ -5830,8 +5830,8 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
+  m_ChildAlignment: 4
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -5852,14 +5852,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -21627,6 +21627,9 @@ MonoBehaviour:
   TeamMemberPrefab: {fileID: 7475637550302654217, guid: 8548515f4fffd9c488c5c42974b143b1,
     type: 3}
   TeamMembersParent: {fileID: 1588887701}
+  PipImagePrefab: {fileID: 3552476138331668399, guid: d92324f5921dd2c4daaf929f9a790fc2,
+    type: 3}
+  PipImageParent: {fileID: 426120281}
 --- !u!114 &1588887704
 MonoBehaviour:
   m_ObjectHideFlags: 0

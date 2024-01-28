@@ -8,6 +8,9 @@ public class TeamInstaller : MonoInstaller
 	[SerializeField] private GameObject TeamMemberPrefab;
 	[SerializeField] private Transform TeamMembersParent;
 
+	[SerializeField] private GameObject PipImagePrefab;
+	[SerializeField] private Transform PipImageParent;
+
 	public override void InstallBindings()
 	{
 		Container.BindModel<TeamAggregate>();
@@ -26,5 +29,15 @@ public class TeamInstaller : MonoInstaller
 
 		Container.BindEvent<EnemyEvent, EnemyEvent.EnemiesTurnEnded>()
 			.ToCommand<ITeamCommands, TeamError>((_, team) => team.StartTurn());
+
+		Container.BindPrefabFactory<PipImageParams>(
+			PipImagePrefab, PipImageParent,
+			(container, pipImage) =>
+			{
+				container.BindInstance(pipImage.TeamMemberId);
+				container.BindInstance(pipImage.Texture);
+			},
+			_ => Vector3.zero
+		);
 	}
 }

@@ -36,7 +36,7 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 			})
 			.AddTo(this);
 
-		TeamCameras.Add(_controller.playerCamera);
+		TeamCameras.Add(TeamMemberId, _controller.playerCamera);
 
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamExited>()
 			.Subscribe(_ =>

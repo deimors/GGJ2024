@@ -31,7 +31,7 @@ public class EnemyVisibilityDetector : MonoBehaviour
 	}
 
 	public bool CanBeSeenByTeamCamera() 
-		=> TeamCameras.Any(CanBeSeenByCamera);
+		=> TeamCameras.Values.Any(CanBeSeenByCamera);
 
 	private bool CanBeSeenByCamera(Camera cam)
 	{

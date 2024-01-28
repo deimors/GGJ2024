@@ -1,17 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Game.Implementation.Domain;
 using UnityEngine;
 
-public class TeamCameras : IEnumerable<Camera>
+public class TeamCameras : IReadOnlyDictionary<TeamMemberIdentifier, Camera>
 {
-	private readonly List<Camera> _cameras = new();
+	private readonly Dictionary<TeamMemberIdentifier, Camera> _cameras = new();
 
-	public void Add(Camera camera) 
-		=> _cameras.Add(camera);
+	public IEnumerator<KeyValuePair<TeamMemberIdentifier, Camera>> GetEnumerator()
+	{
+		return _cameras.GetEnumerator();
+	}
 
-	public IEnumerator<Camera> GetEnumerator() 
-		=> _cameras.GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return ((IEnumerable)_cameras).GetEnumerator();
+	}
 
-	IEnumerator IEnumerable.GetEnumerator() 
-		=> ((IEnumerable)_cameras).GetEnumerator();
+	public int Count => _cameras.Count;
+
+	public bool ContainsKey(TeamMemberIdentifier key)
+	{
+		return _cameras.ContainsKey(key);
+	}
+
+	public bool TryGetValue(TeamMemberIdentifier key, out Camera value)
+	{
+		return _cameras.TryGetValue(key, out value);
+	}
+
+	public Camera this[TeamMemberIdentifier key] => _cameras[key];
+
+	public IEnumerable<TeamMemberIdentifier> Keys => _cameras.Keys;
+
+	public IEnumerable<Camera> Values => _cameras.Values;
+
+	public void Add(TeamMemberIdentifier teamMemberId, Camera camera)
+	{
+		_cameras[teamMemberId] = camera;
+	}
 }

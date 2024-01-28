@@ -1,7 +1,7 @@
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
+using Unit = Functional.Unit;
 
 public class TeamCamerasPipPresenter : MonoBehaviour
 {
@@ -9,6 +9,7 @@ public class TeamCamerasPipPresenter : MonoBehaviour
 	[SerializeField] private GameObject PipCameraPrefab;
 
 	[Inject] public TeamCameras TeamCameras { private get; set; }
+	[Inject] public IFactory<PipImageParams, Unit> PipImageFactory { private get; set; }
 
 	void Start()
 	{
@@ -19,7 +20,7 @@ public class TeamCamerasPipPresenter : MonoBehaviour
 
 	private void CreatePictureInPictures()
 	{
-		foreach (var teamCamera in TeamCameras)
+		foreach (var (teamMemberId, teamCamera) in TeamCameras)
 		{
 			var renderTexture = new RenderTexture(128, 128, 16, RenderTextureFormat.ARGB32);
 
@@ -32,11 +33,7 @@ public class TeamCamerasPipPresenter : MonoBehaviour
 
 			pipCamera.targetTexture = renderTexture;
 
-			var pipPanel = Instantiate(PipPrefab);
-
-			pipPanel.transform.SetParent(transform);
-
-			pipPanel.GetComponent<RawImage>().texture = renderTexture;
+			PipImageFactory.Create(new PipImageParams(teamMemberId, renderTexture));
 		}
 	}
 }
