@@ -15,6 +15,7 @@ public class EnemyPathfinder : MonoBehaviour
 	[Inject] public TeamPositions TeamPositions { private get; set; }
 	[Inject] public IEnemyEvents EnemyEvents { private get; set; }
 	[Inject] public IEnemyCommands EnemyCommands { private get; set; }
+	[Inject] public ITeamCommands TeamCommands { private get; set; }
 
 	private const float MovePerTurnDistance = 7f;
 
@@ -26,6 +27,7 @@ public class EnemyPathfinder : MonoBehaviour
 	private EnemyVisibilityDetector _visibilityDetector;
 	private Vector3 _lastNode;
 	private float _accumulatedDistance;
+	private readonly Collider[] _colliders = new Collider[10];
 
 	void Awake()
 	{
@@ -48,6 +50,27 @@ public class EnemyPathfinder : MonoBehaviour
 		nextNode.y = transform.position.y;
 		_accumulatedDistance += (nextNode - transform.position).magnitude;
 
+		var projectedCollisions = Physics.OverlapSphereNonAlloc(transform.position, 1, _colliders);
+
+		if (projectedCollisions > 0)
+		{
+			var teamCollisions = _colliders.Take(projectedCollisions).Select(collider => collider.GetComponent<ITeamMember>())
+				.Where(teamMember => teamMember != null);
+
+			var teamMemberId = teamCollisions.FirstOrDefault()?.TeamMemberId;
+
+			if (teamMemberId != null)
+			{
+				Debug.Log($"Projected collision with team member {teamMemberId}");
+				EndTurn();
+
+				TeamCommands.KillTeamMember(teamMemberId);
+
+				return;
+			}
+			
+		}
+
 		transform.position = nextNode;
 
 		var isSeen = _visibilityDetector.CanBeSeenByTeamCamera();
@@ -55,19 +78,27 @@ public class EnemyPathfinder : MonoBehaviour
 
 		if (isSeen || moveExhausted)
 		{
-			if (isSeen) Debug.Log($"{EnemyId} -> Seen!");
+			if (isSeen)
+			{
+				Debug.Log($"{EnemyId} -> Seen!");
+				transform.position = _lastNode;
+			}
 			if (moveExhausted) Debug.Log($"{EnemyId} -> Move exhausted");
 
-			transform.position = _lastNode;
-			_pathToFollow.Clear();
-			_accumulatedDistance = 0;
-
-			EnemyCommands.EndEnemyTurn(EnemyId);
+			EndTurn();
 		}
 
 		_lastNode = nextNode;
 	}
 
+	private void EndTurn()
+	{
+		_pathToFollow.Clear();
+		_accumulatedDistance = 0;
+
+		EnemyCommands.EndEnemyTurn(EnemyId);
+	}
+	
 	public void StartPathCalculation()
     {
 	    if (_visibilityDetector.CanBeSeenByTeamCamera())

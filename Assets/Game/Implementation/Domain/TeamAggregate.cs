@@ -17,6 +17,7 @@ namespace Assets.Game.Implementation.Domain
 		private TeamMemberIdentifier _currentTeamMember;
 
 		private Dictionary<TeamMemberIdentifier, TeamMemberState> _states;
+		private HashSet<TeamMemberIdentifier> _killed = new();
 
 		public IDisposable Subscribe(IObserver<TeamEvent> observer) 
 			=> _events.Subscribe(observer);
@@ -31,13 +32,16 @@ namespace Assets.Game.Implementation.Domain
 				_events.OnNext(new TeamEvent.TeamMemberCreated(teamMemberId, position));
 			}
 
-			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1.0f)));
+			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1, false)));
 
 			return Unit.Value;
 		}
 
 		public Result<Unit, TeamError> MoveTeamMember(Vector3 targetVelocity, float amount)
 		{
+			if (_killed.Contains(_currentTeamMember))
+				return Unit.Value;
+
 			var currentState = _states[_currentTeamMember];
 
 			if (currentState.MoveRemaining == 0)
@@ -72,17 +76,21 @@ namespace Assets.Game.Implementation.Domain
 			_currentTeamMember = teamMemberId;
 			var remainingMovePercent = _states[_currentTeamMember].MoveRemaining / TotalMove;
 
-			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, remainingMovePercent));
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, remainingMovePercent, _killed.Contains(teamMemberId)));
 
 			return Unit.Value;
 		}
 
 		public Result<Unit, TeamError> StartTurn()
 		{
-			_states = _states.ToDictionary(pair => pair.Key, pair => pair.Value with { MoveRemaining = TotalMove });
+			_states = _states
+				.ToDictionary(
+					pair => pair.Key, 
+					pair => _killed.Contains(pair.Key) ? pair.Value : pair.Value with { MoveRemaining = TotalMove }
+				);
 
 			_events.OnNext(new TeamEvent.TeamTurnStarted());
-			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1));
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1, _killed.Contains(_currentTeamMember)));
 
 			return Unit.Value;
 		}
@@ -102,6 +110,14 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
+		public Result<Unit, TeamError> KillTeamMember(TeamMemberIdentifier teamMemberId)
+		{
+			_killed.Add(teamMemberId);
+
+			_events.OnNext(new TeamEvent.TeamMemberKilled(teamMemberId));
+
+			return Unit.Value;
+		}
 
 
 		private bool NoMovementRemaining => _states.All(pair => pair.Value.MoveRemaining == 0);

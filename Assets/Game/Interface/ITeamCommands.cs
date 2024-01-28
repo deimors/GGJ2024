@@ -12,4 +12,5 @@ public interface ITeamCommands
 	Result<Unit, TeamError> StartTurn();
 	Result<Unit, TeamError> EndTurn();
 	Result<Unit, TeamError> ExitTeamMember(TeamMemberIdentifier teamMemberId);
+	Result<Unit, TeamError> KillTeamMember(TeamMemberIdentifier teamMemberId);
 }
