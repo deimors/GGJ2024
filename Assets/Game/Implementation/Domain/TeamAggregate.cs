@@ -77,6 +77,9 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
+		public Result<Unit, TeamError> DrainSelectedTeamMemberMove() 
+			=> ReduceRemainingMove(_currentTeamMember, _states[_currentTeamMember].MoveRemaining);
+
 		public Result<Unit, TeamError> DeclareTeamMemberPosition(TeamMemberIdentifier teamMemberId, Vector3 position)
 		{
 			_events.OnNext(new TeamEvent.TeamMemberPositionDeclared(teamMemberId, position));

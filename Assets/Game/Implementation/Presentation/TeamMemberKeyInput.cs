@@ -7,6 +7,7 @@ public class TeamMemberKeyInput : MonoBehaviour
 {
 	[SerializeField] private KeyCode[] TeamMemberKeys;
 	[SerializeField] private KeyCode EndTurnKey = KeyCode.Space;
+	[SerializeField] private KeyCode EndTeamMemberTurnKey = KeyCode.F;
 
 	[Inject] public ITeamCommands TeamCommands { private get; set; }
 
@@ -20,6 +21,9 @@ public class TeamMemberKeyInput : MonoBehaviour
 
 		if (Input.GetKeyDown(EndTurnKey))
 			TeamCommands.EndTurn();
+
+		if (Input.GetKeyDown(EndTeamMemberTurnKey))
+			TeamCommands.DrainSelectedTeamMemberMove();
 	}
 
 	void FixedUpdate()
