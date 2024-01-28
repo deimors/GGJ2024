@@ -8,6 +8,7 @@ public class PipImagePresenter : MonoBehaviour
 {
 	private RawImage _rawImage;
 	[SerializeField] private Slider _slider;
+	[SerializeField] private Image _borderImage;
 
 	[Inject] public TeamMemberIdentifier TeamMemberId { private get; set; }
 	[Inject] public RenderTexture Texture { private get; set; }
@@ -32,6 +33,10 @@ public class PipImagePresenter : MonoBehaviour
 
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamTurnStarted>()
 			.Subscribe(_ => _slider.value = 1)
+			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberSelected>()
+			.Subscribe(selected => _borderImage.enabled = selected.TeamMemberId == TeamMemberId)
 			.AddTo(this);
 	}
 }

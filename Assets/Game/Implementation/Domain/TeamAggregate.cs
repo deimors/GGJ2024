@@ -32,7 +32,7 @@ namespace Assets.Game.Implementation.Domain
 				_events.OnNext(new TeamEvent.TeamMemberCreated(teamMemberId, position));
 			}
 
-			Observable.NextFrame().Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1, false)));
+			Observable.EveryUpdate().Skip(2).Take(1).Subscribe(_ => _events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1, false)));
 
 			return Unit.Value;
 		}
