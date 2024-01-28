@@ -73,6 +73,8 @@ public class EnemyPathfinder : MonoBehaviour
 	    if (_visibilityDetector.CanBeSeenByTeamCamera())
 	    {
 			Debug.Log("Already Seen!");
+			EnemyCommands.EndEnemyTurn(EnemyId);
+
 			return;
 	    }
 

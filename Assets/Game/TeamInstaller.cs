@@ -23,5 +23,8 @@ public class TeamInstaller : MonoInstaller
 
 		Container.Bind<TeamCameras>().ToSelf().AsSingle();
 		Container.BindInterfacesAndSelfTo<TeamPositions>().AsSingle().NonLazy();
+
+		Container.BindEvent<EnemyEvent, EnemyEvent.EnemiesTurnEnded>()
+			.ToCommand<ITeamCommands, TeamError>((_, team) => team.StartTurn());
 	}
 }

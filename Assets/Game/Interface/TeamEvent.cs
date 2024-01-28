@@ -13,6 +13,8 @@ public abstract record TeamEvent
 
 	public record TeamMovementDepleted : TeamEvent;
 
+	public record TeamTurnStarted : TeamEvent;
+
 	public record TeamTurnEnded : TeamEvent;
 
 	public record TeamExited : TeamEvent;

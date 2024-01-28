@@ -77,6 +77,16 @@ namespace Assets.Game.Implementation.Domain
 			return Unit.Value;
 		}
 
+		public Result<Unit, TeamError> StartTurn()
+		{
+			_states = _states.ToDictionary(pair => pair.Key, pair => pair.Value with { MoveRemaining = TotalMove });
+
+			_events.OnNext(new TeamEvent.TeamTurnStarted());
+			_events.OnNext(new TeamEvent.TeamMemberSelected(_currentTeamMember, 1));
+
+			return Unit.Value;
+		}
+
 		public Result<Unit, TeamError> EndTurn()
 		{
 			if (NoMovementRemaining)
@@ -91,6 +101,8 @@ namespace Assets.Game.Implementation.Domain
 
 			return Unit.Value;
 		}
+
+
 
 		private bool NoMovementRemaining => _states.All(pair => pair.Value.MoveRemaining == 0);
 	}
