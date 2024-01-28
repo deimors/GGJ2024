@@ -16,6 +16,8 @@ public class EnemyPathfinder : MonoBehaviour
 	[Inject] public IEnemyEvents EnemyEvents { private get; set; }
 	[Inject] public IEnemyCommands EnemyCommands { private get; set; }
 
+	private const float MovePerTurnDistance = 7f;
+
 	private Path _currentShortestPath;
 
 	private readonly Queue<Vector3> _playerPositionsToCheck = new();
@@ -23,6 +25,7 @@ public class EnemyPathfinder : MonoBehaviour
 	private readonly Queue<Vector3> _pathToFollow = new();
 	private EnemyVisibilityDetector _visibilityDetector;
 	private Vector3 _lastNode;
+	private float _accumulatedDistance;
 
 	void Awake()
 	{
@@ -43,13 +46,21 @@ public class EnemyPathfinder : MonoBehaviour
 			return;
 
 		nextNode.y = transform.position.y;
+		_accumulatedDistance += (nextNode - transform.position).magnitude;
+
 		transform.position = nextNode;
 
-		if (_visibilityDetector.CanBeSeenByTeamCamera())
+		var isSeen = _visibilityDetector.CanBeSeenByTeamCamera();
+		var moveExhausted = _accumulatedDistance >= MovePerTurnDistance;
+
+		if (isSeen || moveExhausted)
 		{
-			Debug.Log("Seen!");
+			if (isSeen) Debug.Log($"{EnemyId} -> Seen!");
+			if (moveExhausted) Debug.Log($"{EnemyId} -> Move exhausted");
+
 			transform.position = _lastNode;
 			_pathToFollow.Clear();
+			_accumulatedDistance = 0;
 
 			EnemyCommands.EndEnemyTurn(EnemyId);
 		}
@@ -90,8 +101,6 @@ public class EnemyPathfinder : MonoBehaviour
 		if (!_playerPositionsToCheck.Any())
 		{
 			Debug.Log($"Shortest path: {_currentShortestPath}");
-
-			//_followingPath = _currentShortestPath;
 
 			foreach (var node in _currentShortestPath.vectorPath)
 				_pathToFollow.Enqueue(node);

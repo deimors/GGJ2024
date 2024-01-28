@@ -19,6 +19,8 @@ public abstract record EnemyEvent
 	public record EnemyCreated(EnemyIdentifier EnemyId, Vector3 Position) : EnemyEvent;
 
 	public record EnemyTurnStarted(EnemyIdentifier EnemyId) : EnemyEvent;
+
+	public record EnemiesTurnEnded : EnemyEvent;
 }
 
 public record EnemiesConfig(IReadOnlyDictionary<EnemyIdentifier, Vector3> Positions);

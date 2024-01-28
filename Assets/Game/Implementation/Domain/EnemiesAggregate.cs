@@ -46,6 +46,8 @@ namespace Assets.Game.Implementation.Domain
 			{
 				Debug.Log("All enemies done!");
 
+				_events.OnNext(new EnemyEvent.EnemiesTurnEnded());
+
 				return Unit.Value;
 			}
 
