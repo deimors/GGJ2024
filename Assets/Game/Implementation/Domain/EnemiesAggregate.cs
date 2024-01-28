@@ -13,6 +13,7 @@ namespace Assets.Game.Implementation.Domain
 		private readonly Subject<EnemyEvent> _events = new();
 		private IReadOnlyList<EnemyIdentifier> _enemies;
 		private int _nextEnemyIndex;
+		private readonly HashSet<EnemyIdentifier> _activated = new();
 
 		public IDisposable Subscribe(IObserver<EnemyEvent> observer) 
 			=> _events.Subscribe(observer);
@@ -54,6 +55,18 @@ namespace Assets.Game.Implementation.Domain
 			var nextEnemyId = _enemies[_nextEnemyIndex];
 			_nextEnemyIndex++;
 			_events.OnNext(new EnemyEvent.EnemyTurnStarted(nextEnemyId));
+
+			return Unit.Value;
+		}
+
+		public Result<Unit, EnemyError> ActivateEnemy(EnemyIdentifier enemyId)
+		{
+			if (_activated.Contains(enemyId))
+				return Unit.Value;
+
+			_activated.Add(enemyId);
+
+			_events.OnNext(new EnemyEvent.EnemyActivated(enemyId));
 
 			return Unit.Value;
 		}

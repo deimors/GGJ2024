@@ -4,6 +4,7 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 using Zenject;
+using Functional;
 
 [RequireComponent(typeof(EnemyVisibilityDetector))]
 public class EnemyPathfinder : MonoBehaviour
@@ -30,6 +31,7 @@ public class EnemyPathfinder : MonoBehaviour
 	private Vector3 _lastNode;
 	private float _accumulatedDistance;
 	private readonly Collider[] _colliders = new Collider[10];
+	private bool _activated;
 
 	void Awake()
 	{
@@ -40,7 +42,19 @@ public class EnemyPathfinder : MonoBehaviour
 	{
 		EnemyEvents.OfType<EnemyEvent, EnemyEvent.EnemyTurnStarted>()
 			.Where(started => started.EnemyId == EnemyId)
-			.Subscribe(_ => StartPathCalculation())
+			.Subscribe(_ =>
+			{
+				if (_activated)
+					StartPathCalculation();
+				else
+					EndTurn();
+			})
+			.AddTo(this);
+
+		EnemyEvents.OfType<EnemyEvent, EnemyEvent.EnemyActivated>()
+			.Where(activated => activated.EnemyId == EnemyId)
+			.Do(Debug.Log)
+			.Subscribe(_ => _activated = true)
 			.AddTo(this);
 	}
 
@@ -52,7 +66,7 @@ public class EnemyPathfinder : MonoBehaviour
 		if (!_pathToFollow.TryDequeue(out var nextNode))
 			return;
 
-		var lookPos = _pathToFollow.Last();
+		var lookPos = _pathToFollow.Any() ? _pathToFollow.Last() : nextNode;
 		lookPos.y = transform.position.y;
 		var lookDir = (lookPos - transform.position).normalized;
 

@@ -10,6 +10,7 @@ public interface IEnemyCommands
 
 	Result<Unit, EnemyError> StartTurn();
 	Result<Unit, EnemyError> EndEnemyTurn(EnemyIdentifier enemyId);
+	Result<Unit, EnemyError> ActivateEnemy(EnemyIdentifier enemyId);
 }
 
 public interface IEnemyEvents : IObservable<EnemyEvent> {}
@@ -21,6 +22,8 @@ public abstract record EnemyEvent
 	public record EnemyTurnStarted(EnemyIdentifier EnemyId) : EnemyEvent;
 
 	public record EnemiesTurnEnded : EnemyEvent;
+
+	public record EnemyActivated(EnemyIdentifier EnemyId) : EnemyEvent;
 }
 
 public record EnemiesConfig(IReadOnlyDictionary<EnemyIdentifier, Vector3> Positions);

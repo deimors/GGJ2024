@@ -10,6 +10,7 @@ public class EnemyPresenter : MonoBehaviour
 	[Inject] public EnemyIdentifier EnemyId { private get; set; }
 
 	[Inject] public IEnemyEvents EnemyEvents { private get; set; }
+	[Inject] public IEnemyCommands EnemyCommands { private get; set; }
 
 	void Awake()
 	{
@@ -28,6 +29,7 @@ public class EnemyPresenter : MonoBehaviour
 	{
 		var isVisible = _visibilityDetector.CanBeSeenByTeamCamera();
 
-		Debug.Log($"{EnemyId} turn started; is visible = {isVisible}");
+		if (isVisible)
+			EnemyCommands.ActivateEnemy(EnemyId);
 	}
 }
