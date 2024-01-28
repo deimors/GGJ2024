@@ -14721,6 +14721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1433ff3cab3d04f9f9895bf7a63c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NumberofEnemies: 1
 --- !u!1001 &1150343606
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20746,6 +20747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TeamMemberKeys: 3100000032000000
   EndTurnKey: 32
+  EndTeamMemberTurnKey: 102
 --- !u!114 &1588887703
 MonoBehaviour:
   m_ObjectHideFlags: 0
