@@ -10,6 +10,8 @@ public class EnemyPathfinder : MonoBehaviour
 {
 	// https://arongranberg.com/astar/docs/custom_movement_script.html
 
+	[SerializeField] private Transform _model;
+
 	[Inject] public EnemyIdentifier EnemyId { private get; set; }
 
 	[Inject] public TeamPositions TeamPositions { private get; set; }
@@ -49,6 +51,12 @@ public class EnemyPathfinder : MonoBehaviour
 	{
 		if (!_pathToFollow.TryDequeue(out var nextNode))
 			return;
+
+		var lookPos = _pathToFollow.Last();
+		lookPos.y = transform.position.y;
+		var lookDir = (lookPos - transform.position).normalized;
+
+		_model.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
 
 		nextNode.y = transform.position.y;
 		_accumulatedDistance += (nextNode - transform.position).magnitude;
