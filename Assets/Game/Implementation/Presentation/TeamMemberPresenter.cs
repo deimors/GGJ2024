@@ -4,10 +4,13 @@ using UniRx;
 using UnityEngine;
 using Zenject;
 
-[RequireComponent(typeof(FirstPersonController))]
+[RequireComponent(typeof(FirstPersonController), typeof(Collider), typeof(Rigidbody))]
 public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 {
 	private FirstPersonController _controller;
+	private Collider _collider;
+	private Rigidbody _rigidbody;
+	private bool _isKilled;
 
 	[Inject] public TeamMemberIdentifier TeamMemberId { get; set; }
 
@@ -18,6 +21,8 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 	void Awake()
 	{
 		_controller = GetComponent<FirstPersonController>();
+		_collider = GetComponent<Collider>();
+		_rigidbody = GetComponent<Rigidbody>();
 	}
 
 	void Start()
@@ -32,7 +37,7 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 			.Subscribe(isMoving =>
 			{
 				_controller.playerCamera.enabled = isMoving;
-				_controller.cameraCanMove = isMoving;
+				_controller.cameraCanMove = !_isKilled && isMoving;
 			})
 			.AddTo(this);
 
@@ -57,6 +62,17 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 
 		_controller.CharacterMoved
 			.Subscribe(moveAmount => TeamCommands.ReduceRemainingMove(TeamMemberId, moveAmount))
+			.AddTo(this);
+
+		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberKilled>()
+			.Where(killed => killed.TeamMemberId == TeamMemberId)
+			.Subscribe(_ =>
+			{
+				_isKilled = true;
+				_collider.enabled = false;
+				_rigidbody.isKinematic = true;
+				TeamCameras.Remove(TeamMemberId);
+			})
 			.AddTo(this);
 	}
 }

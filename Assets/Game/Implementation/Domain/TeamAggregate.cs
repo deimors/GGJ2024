@@ -136,7 +136,7 @@ namespace Assets.Game.Implementation.Domain
 		}
 
 
-		private bool NoMovementRemaining => _states.All(pair => pair.Value.MoveRemaining == 0);
+		private bool NoMovementRemaining => _states.Where(pair => !_killed.Contains(pair.Key)).All(pair => pair.Value.MoveRemaining == 0);
 	}
 
 	internal record TeamMemberState(float MoveRemaining);

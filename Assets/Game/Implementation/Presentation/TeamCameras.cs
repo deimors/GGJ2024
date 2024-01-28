@@ -35,8 +35,9 @@ public class TeamCameras : IReadOnlyDictionary<TeamMemberIdentifier, Camera>
 
 	public IEnumerable<Camera> Values => _cameras.Values;
 
-	public void Add(TeamMemberIdentifier teamMemberId, Camera camera)
-	{
-		_cameras[teamMemberId] = camera;
-	}
+	public void Add(TeamMemberIdentifier teamMemberId, Camera camera) 
+		=> _cameras[teamMemberId] = camera;
+
+	public void Remove(TeamMemberIdentifier teamMemberId)
+		=> _cameras.Remove(teamMemberId);
 }
