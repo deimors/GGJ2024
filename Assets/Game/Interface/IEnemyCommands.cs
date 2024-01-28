@@ -9,6 +9,7 @@ public interface IEnemyCommands
 	Result<Unit, EnemyError> Initialize(EnemiesConfig config);
 
 	Result<Unit, EnemyError> StartTurn();
+	Result<Unit, EnemyError> EndEnemyTurn(EnemyIdentifier enemyId);
 }
 
 public interface IEnemyEvents : IObservable<EnemyEvent> {}

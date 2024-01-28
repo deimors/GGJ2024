@@ -14,6 +14,7 @@ public class EnemyPathfinder : MonoBehaviour
 
 	[Inject] public TeamPositions TeamPositions { private get; set; }
 	[Inject] public IEnemyEvents EnemyEvents { private get; set; }
+	[Inject] public IEnemyCommands EnemyCommands { private get; set; }
 
 	private Path _currentShortestPath;
 
@@ -49,6 +50,8 @@ public class EnemyPathfinder : MonoBehaviour
 			Debug.Log("Seen!");
 			transform.position = _lastNode;
 			_pathToFollow.Clear();
+
+			EnemyCommands.EndEnemyTurn(EnemyId);
 		}
 
 		_lastNode = nextNode;
