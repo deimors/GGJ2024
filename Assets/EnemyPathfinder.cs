@@ -42,7 +42,10 @@ public class EnemyPathfinder : MonoBehaviour
 			.AddTo(this);
 	}
 
-	void Update()
+	// NOTE - must be done in FixedUpdate() rather than Update() because raycasting (EnemyVisibilityDetector.CanBeSeenByTeamCamera())
+	// depends on fixed update positions.
+	// https://forum.unity.com/threads/help-understanding-raycasting-issues.1239106/  (last post)
+	void FixedUpdate()
 	{
 		if (!_pathToFollow.TryDequeue(out var nextNode))
 			return;
@@ -99,7 +102,7 @@ public class EnemyPathfinder : MonoBehaviour
 		EnemyCommands.EndEnemyTurn(EnemyId);
 	}
 	
-	public void StartPathCalculation()
+	private void StartPathCalculation()
     {
 	    if (_visibilityDetector.CanBeSeenByTeamCamera())
 	    {

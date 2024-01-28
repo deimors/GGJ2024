@@ -7,7 +7,9 @@ public class EnemyVisibilityDetector : MonoBehaviour
 {
 	[Inject] public TeamCameras TeamCameras { private get; set; }
 
-	private const float TestExtremityScale = 0.5f;
+	private const int MinimumNumberOfPointsVisible = 1;
+
+	private const float TestExtremityScale = 0.9f;
 	private static readonly List<Vector3> EnemyTestPointOffsetsFromCentre = new()
 	{
 		new Vector3(0f, 0f, 0f), // centre
@@ -74,9 +76,13 @@ public class EnemyVisibilityDetector : MonoBehaviour
 			var raycastHit = Physics.Raycast(ray, out var hitInfo) && hitInfo.collider == _enemyCollider;
 
 			if (raycastHit)
+			{
 				numTestPointsVisible++;
+				if (++numTestPointsVisible >= MinimumNumberOfPointsVisible)
+					return true;
+			}
 		}
 
-		return numTestPointsVisible > 0;
+		return false;
 	}
 }
