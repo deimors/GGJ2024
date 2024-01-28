@@ -28,8 +28,9 @@ public class TeamCamerasPipPresenter : MonoBehaviour
 			pip.transform.parent = teamCamera.transform;
 			pip.transform.localPosition = Vector3.zero;
 			pip.transform.localRotation = Quaternion.identity;
-			
+
 			var pipCamera = pip.GetComponent<Camera>();
+			pipCamera.nearClipPlane = teamCamera.nearClipPlane;
 
 			pipCamera.targetTexture = renderTexture;
 

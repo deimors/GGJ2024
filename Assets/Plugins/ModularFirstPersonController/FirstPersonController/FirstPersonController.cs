@@ -20,6 +20,12 @@ public class FirstPersonController : MonoBehaviour
 {
 	private readonly Subject<float> _characterMoved = new();
 	public IObservable<float> CharacterMoved => _characterMoved;
+	
+	private readonly Subject<bool> _characterMoving = new();
+	public IObservable<bool> CharacterMoving => _characterMoving;
+
+	private readonly Subject<Vector3> _characterVelocity = new();
+	public IObservable<Vector3> CharacterVelocity => _characterVelocity;
 
     private Rigidbody rb;
 
@@ -207,6 +213,7 @@ public class FirstPersonController : MonoBehaviour
 
     float camRotation;
     private Vector3 _lastPos;
+    private int _lastMovedFrame;
 
     private void Update()
     {
@@ -372,6 +379,12 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (_lastMovedFrame < Time.frameCount)
+            _characterMoving.OnNext(false);
+    }
+
     public void MovePlayer(Vector3 targetVelocity)
     {
         #region Movement
@@ -451,8 +464,13 @@ public class FirstPersonController : MonoBehaviour
 	            _characterMoved.OnNext(moveDist);
             }
 
+            _characterMoving.OnNext(isWalking);
+            _characterVelocity.OnNext(rb.velocity);
+
             _lastPos = rb.position;
-		}
+        }
+
+        _lastMovedFrame = Time.frameCount;
 
         #endregion
     }
