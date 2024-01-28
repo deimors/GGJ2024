@@ -8,13 +8,20 @@ using UnityEngine;
 public class TeamPositions : IReadOnlyDictionary<TeamMemberIdentifier, Vector3>, IDisposable
 {
 	private readonly Dictionary<TeamMemberIdentifier, Vector3> _positions = new();
-	private readonly IDisposable _disposable;
+	private readonly CompositeDisposable _disposables;
 
 	public TeamPositions(ITeamEvents teamEvents)
 	{
-		_disposable = teamEvents.OfType<TeamEvent, TeamEvent.TeamMemberPositionDeclared>()
+		_disposables = new CompositeDisposable();
+
+		teamEvents.OfType<TeamEvent, TeamEvent.TeamMemberPositionDeclared>()
 			.Do(Debug.Log)
-			.Subscribe(declared => _positions[declared.TeamMemberId] = declared.Position);
+			.Subscribe(declared => _positions[declared.TeamMemberId] = declared.Position)
+			.AddTo(_disposables);
+
+		teamEvents.OfType<TeamEvent, TeamEvent.TeamMemberKilled>()
+			.Subscribe(killed => _positions.Remove(killed.TeamMemberId))
+			.AddTo(_disposables);
 	}
 
 	public IEnumerator<KeyValuePair<TeamMemberIdentifier, Vector3>> GetEnumerator() => _positions.GetEnumerator();
@@ -33,5 +40,5 @@ public class TeamPositions : IReadOnlyDictionary<TeamMemberIdentifier, Vector3>,
 
 	public IEnumerable<Vector3> Values => _positions.Values;
 
-	public void Dispose() => _disposable.Dispose();
+	public void Dispose() => _disposables.Dispose();
 }

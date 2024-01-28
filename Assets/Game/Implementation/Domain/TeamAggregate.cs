@@ -99,6 +99,8 @@ namespace Assets.Game.Implementation.Domain
 
 		public Result<Unit, TeamError> StartTurn()
 		{
+			Debug.Log("Start turn");
+
 			_states = _states
 				.ToDictionary(
 					pair => pair.Key, 

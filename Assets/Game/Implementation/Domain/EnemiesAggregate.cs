@@ -43,6 +43,8 @@ namespace Assets.Game.Implementation.Domain
 
 		public Result<Unit, EnemyError> EndEnemyTurn(EnemyIdentifier enemyId)
 		{
+			Debug.Log($"End turn for {enemyId}");
+
 			if (_nextEnemyIndex == _enemies.Count)
 			{
 				Debug.Log("All enemies done!");

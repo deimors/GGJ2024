@@ -71,6 +71,7 @@ public class TeamMemberPresenter : MonoBehaviour, ITeamMember
 				_isKilled = true;
 				_collider.enabled = false;
 				_rigidbody.isKinematic = true;
+				_controller.cameraCanMove = false;
 				TeamCameras.Remove(TeamMemberId);
 			})
 			.AddTo(this);
