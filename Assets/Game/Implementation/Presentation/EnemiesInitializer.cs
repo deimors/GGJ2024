@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -12,8 +13,11 @@ public class EnemiesInitializer : MonoBehaviour
 
 	void Start()
 	{
-		var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>();
-		// var spawnPoints = GetRandomSpawnPoints();
+		// var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>();
+		var spawnPoints = GetRandomSpawnPoints();
+		
+		// deactivate all unused spawns
+		
 
 		var enemyPositions = spawnPoints
 			.ToDictionary(
@@ -29,7 +33,7 @@ public class EnemiesInitializer : MonoBehaviour
 
 	private IEnumerable<EnemySpawnPoint> GetRandomSpawnPoints()
 	{
-		var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>();
+		var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>().Where(e => e.gameObject.activeSelf).ToArray();
 		var spawnPointsUpperBound = spawnPoints.Length - 1;
 
 		var randomSpawnIndexList = new List<int>();
@@ -45,10 +49,15 @@ public class EnemiesInitializer : MonoBehaviour
 				newSpawnPointFound = true;
 			}
 		}
-
-		foreach (var spawnIndex in randomSpawnIndexList)
+		
+		// Deactivate unused spawns
+		for (var i = 0; i <= spawnPointsUpperBound; i++)
 		{
-			yield return spawnPoints[spawnIndex];
+			if (randomSpawnIndexList.Contains(i)) continue;
+				spawnPoints[i].gameObject.SetActive(false);
+			// Destroy(spawnPoints[i]);
 		}
+
+		return randomSpawnIndexList.Select(spawnIndex => spawnPoints[spawnIndex]).ToList();
 	}
 }
