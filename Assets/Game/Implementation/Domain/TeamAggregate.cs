@@ -12,7 +12,7 @@ namespace Assets.Game.Implementation.Domain
 	{
 		private readonly Subject<TeamEvent> _events = new();
 
-		private const float TotalMove = 5.0f;
+		private const float TotalMove = 2.0f;
 
 		private TeamMemberIdentifier _currentTeamMember;
 
