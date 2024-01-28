@@ -36,6 +36,9 @@ public class EnemiesInitializer : MonoBehaviour
 		var spawnPoints = GetComponentsInChildren<EnemySpawnPoint>().Where(e => e.gameObject.activeSelf).ToArray();
 		var spawnPointsUpperBound = spawnPoints.Length - 1;
 
+		if (spawnPoints.Length <= NumberofEnemies)
+			return spawnPoints;
+
 		var randomSpawnIndexList = new List<int>();
 		for (var i = 0; i < NumberofEnemies; i++)
 		{
