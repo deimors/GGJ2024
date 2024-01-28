@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -6,22 +5,6 @@ using Zenject;
 public class EnemyVisibilityDetector : MonoBehaviour
 {
 	[Inject] public TeamCameras TeamCameras { private get; set; }
-
-	private const int MinimumNumberOfPointsVisible = 1;
-
-	private const float TestExtremityScale = 0.9f;
-	private static readonly List<Vector3> EnemyTestPointOffsetsFromCentre = new()
-	{
-		new Vector3(0f, 0f, 0f), // centre
-		new Vector3(1f, 1f, 1f) * TestExtremityScale,
-		new Vector3(1f, 1f, -1f) * TestExtremityScale,
-		new Vector3(1f, -1f, 1f) * TestExtremityScale,
-		new Vector3(1f, -1f, -1f) * TestExtremityScale,
-		new Vector3(-1f, 1f, -1f) * TestExtremityScale,
-		new Vector3(-1f, -1f, 1f) * TestExtremityScale,
-		new Vector3(-1f, -1f, -1f) * TestExtremityScale,
-		new Vector3(-1f, 1f, 1f) * TestExtremityScale,
-	};
 
 	private Collider _enemyCollider;
 	private MeshFilter _meshFilter;
@@ -38,7 +21,9 @@ public class EnemyVisibilityDetector : MonoBehaviour
 	private bool CanBeSeenByCamera(Camera cam)
 	{
 		var camFrustrum = GeometryUtility.CalculateFrustumPlanes(cam);
-		var camPosition = cam.transform.position;
+		var nearPlaneMidLeft = cam.ViewportToWorldPoint(new Vector3(0f, 0.5f, cam.nearClipPlane));
+		var nearPlaneMidRight = cam.ViewportToWorldPoint(new Vector3(1f, 0.5f, cam.nearClipPlane));
+		var nearPlaneMidCentre = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, cam.nearClipPlane));
 
 		// Check each enemy's visibility relative to the camera.
 		// An enemy is visible if BOTH:
@@ -53,34 +38,43 @@ public class EnemyVisibilityDetector : MonoBehaviour
 		//       From https://docs.unity3d.com/ScriptReference/GeometryUtility.TestPlanesAABB.html:
 		//           "Will return true if the bounding box is inside the planes or intersects any of the planes."
 		//         "intersects" seems to indicate that it does indeed test for ANY portion?
+		// TODO - necessary???
 		var isInFrustum = GeometryUtility.TestPlanesAABB(camFrustrum, _enemyCollider.bounds);
 
 		if (!isInFrustum)
 			return false;
 
 		var enemyMesh = _meshFilter.sharedMesh;
-		var enemyBounds = enemyMesh.bounds;
+		enemyMesh.RecalculateBounds(); // TODO - necessary???
 
-		var pointsOnEnemy = EnemyTestPointOffsetsFromCentre.Select(o =>
-			transform.TransformPoint(enemyBounds.center + Vector3.Scale(enemyBounds.extents, o))
-		);
-
-		var numTestPointsVisible = 0;
-		foreach (var testPoint in pointsOnEnemy)
+		// Algorithm based on: https://forum.unity.com/threads/check-if-a-collider-is-visible-from-a-position.424760/
+		foreach (var vertex in enemyMesh.vertices)
 		{
-			var directionFromCamToEnemyTestPoint = (testPoint - camPosition).normalized;
-
-			// Test point is visible if a raycast from the camera origin to the point hits the enemy
-			// TODO - is it correct/optimal to simply check if the enemy's collider is reference-equal to the hitInfo collider?
-			var ray = new Ray(camPosition, directionFromCamToEnemyTestPoint);
-			var raycastHit = Physics.Raycast(ray, out var hitInfo) && hitInfo.collider == _enemyCollider;
-
-			if (raycastHit)
+			var vertexInWorldCoords = transform.TransformPoint(vertex);
+			var viewportCoords = cam.WorldToViewportPoint(vertexInWorldCoords);
+			if (!(viewportCoords.z > 0f
+				&& viewportCoords.x >= 0f && viewportCoords.x <= 1f
+				&& viewportCoords.y >= 0f && viewportCoords.y <= 1f))
 			{
-				numTestPointsVisible++;
-				if (++numTestPointsVisible >= MinimumNumberOfPointsVisible)
-					return true;
+				continue;
 			}
+
+			// Test point is visible if a raycast from the camera's near plane far-left, far-right or centre (mid-height)
+			// to the test point hits the enemy
+			var ray = new Ray(nearPlaneMidLeft, (vertexInWorldCoords - nearPlaneMidLeft).normalized);
+			var raycastHit = Physics.Raycast(ray, out var hitInfo) && hitInfo.transform.gameObject == gameObject;
+			if (raycastHit)
+				return true;
+
+			ray = new Ray(nearPlaneMidRight, (vertexInWorldCoords - nearPlaneMidRight).normalized);
+			raycastHit = Physics.Raycast(ray, out hitInfo) && hitInfo.transform.gameObject == gameObject;
+			if (raycastHit)
+				return true;
+
+			ray = new Ray(nearPlaneMidCentre, (vertexInWorldCoords - nearPlaneMidCentre).normalized);
+			raycastHit = Physics.Raycast(ray, out hitInfo) && hitInfo.transform.gameObject == gameObject;
+			if (raycastHit)
+				return true;
 		}
 
 		return false;

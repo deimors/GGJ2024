@@ -97,6 +97,7 @@ public class EnemyPathfinder : MonoBehaviour
 		}
 
 		transform.position = nextNode;
+		Physics.SyncTransforms(); // TODO - necessary???
 
 		var isSeen = _visibilityDetector.CanBeSeenByTeamCamera();
 		var moveExhausted = _accumulatedDistance >= MovePerTurnDistance;
@@ -107,6 +108,7 @@ public class EnemyPathfinder : MonoBehaviour
 			{
 				Debug.Log($"{EnemyId} -> Seen!");
 				transform.position = _lastNode;
+				nextNode = _lastNode;
 			}
 			if (moveExhausted) Debug.Log($"{EnemyId} -> Move exhausted");
 
