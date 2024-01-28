@@ -1,4 +1,5 @@
 using Assets.Game.Implementation.Domain;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class PipImagePresenter : MonoBehaviour
 	private RawImage _rawImage;
 	[SerializeField] private Slider _slider;
 	[SerializeField] private Image _borderImage;
+	[SerializeField] private TextMeshProUGUI _keyText;
 
 	[Inject] public TeamMemberIdentifier TeamMemberId { private get; set; }
 	[Inject] public RenderTexture Texture { private get; set; }
@@ -25,6 +27,8 @@ public class PipImagePresenter : MonoBehaviour
 		_rawImage.texture = Texture;
 
 		_slider.value = 1;
+
+		_keyText.text = (TeamMemberId.Value + 1).ToString();
 
 		TeamEvents.OfType<TeamEvent, TeamEvent.TeamMemberMoved>()
 			.Where(moved => moved.TeamMemberId == TeamMemberId)
